@@ -1,5 +1,5 @@
 import React from "react"
-import { RouteComponentProps, Link } from "@reach/router"
+import { RouteComponentProps, navigate } from "@reach/router"
 
 export default function Email(props: RouteComponentProps) {
   return (
@@ -42,6 +42,7 @@ export default function Email(props: RouteComponentProps) {
           </div>
           <div className="mt-6">
             <button
+              onClick={() => navigate(`/confirm`)}
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
             >
