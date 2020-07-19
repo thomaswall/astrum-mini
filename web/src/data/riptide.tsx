@@ -30,9 +30,9 @@ local.interceptor.before_mutation(["connection"], async (mut) => {
   if (mut.merge.status !== "ready") return;
 
   // Refresh todos path from remote and subscribe to any future changes
-  await remote.query({
-      subscribe: true
-  });
+  // await remote.query({
+  //     subscribe: true
+  // });
 });
 
 export { local, sync }
