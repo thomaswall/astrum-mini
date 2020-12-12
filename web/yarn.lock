@@ -877,6 +877,18 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
+"@ironbay/dynamic@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ironbay/dynamic/-/dynamic-2.0.0.tgz#7f863e0356c07575464d9b918a751b79be1dc504"
+  integrity sha512-Klvfq1ADX/x0GrVJV0ZEiQCc8jL6PDsaYiTpw5wOq0Xn50Fyr+8PmaHYrR7sHQNA1+RtZVW0FFOKZCGLMvh1Ig==
+
+"@ironbay/riptide@^0.2.17":
+  version "0.2.28"
+  resolved "https://registry.yarnpkg.com/@ironbay/riptide/-/riptide-0.2.28.tgz#d5cb00bde07438a455aa747ca53e58cb45d9c2a7"
+  integrity sha512-igYz3VlCSYRDzvx1mUjar3Q5rBBQEhO6XxvCM65P8uScaRRYqn/xMActPbNn227sq30rEJR4shG5rk6iSjLelQ==
+  dependencies:
+    "@ironbay/dynamic" "^2.0.0"
+
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.3.tgz#3a582bdb53804c6ba6d146579c46e52130cf4a3b"
@@ -3678,9 +3690,9 @@ inherits@2, inherits@^2.0.1, inherits@^2.0.3, inherits@^2.0.4, inherits@~2.0.3:
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
 ini@~1.3.0:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
+  integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
 
 invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
   version "2.2.4"
@@ -6093,6 +6105,11 @@ terser@^4.3.0, terser@^4.3.9:
     commander "^2.20.0"
     source-map "~0.6.1"
     source-map-support "~0.5.12"
+
+three@^0.118.3:
+  version "0.118.3"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.118.3.tgz#c0bf8c10a68155478f12f4ccac2ff979526a4a0a"
+  integrity sha512-ijECXrNzDkHieoeh2H69kgawTGH8DiamhR4uBN8jEM7VHSKvfTdEvOoHsA8Aq7dh7PHAxhlqBsN5arBI3KixSw==
 
 timers-browserify@^2.0.11:
   version "2.0.11"
