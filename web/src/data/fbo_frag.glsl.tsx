@@ -1,4 +1,3 @@
-
 let frag = `
 uniform sampler2D posTex;
 uniform vec2 dims;
@@ -7,7 +6,7 @@ varying vec2 vUv;
 void main() {
 
     // read the supplied x,y,z vert positions
-    vec3 pos = texture2D(posTex, vUv).xyz / dims.x;
+    vec3 pos = texture2D(posTex, vUv).xyz;
 
     // update the positional attributes here!
     // pos.x += cos(pos.y) / 100.0;
