@@ -14,7 +14,7 @@ const start_time = new Date()
 export default function ThreeD(props: RouteComponentProps) {
   let initFans = () => {
     fans.push({
-      loc: new THREE.Vector2(0, 0.5),
+      loc: new THREE.Vector2(0.5, 0.5),
       direction: new THREE.Vector2(-1.0, 0.0),
       power: 2,
     })
@@ -32,8 +32,8 @@ export default function ThreeD(props: RouteComponentProps) {
   for (let x = 0; x < texture_dim; x++) {
     for (let y = 0; y < texture_dim; y++) {
       let stride = (x + texture_dim * y) * 3
-      data[stride] = x
-      data[stride + 1] = y
+      data[stride] = (x * 255) / 100
+      data[stride + 1] = (y * 255) / 100
       data[stride + 2] = 0 //ignore for now
     }
   }
@@ -43,9 +43,16 @@ export default function ThreeD(props: RouteComponentProps) {
     texture_dim,
     THREE.RGBFormat
   )
-  initFBO(renderer, texture, texture_dim, texture_dim)
+  initFBO(
+    renderer,
+    texture,
+    texture_dim,
+    texture_dim,
+    fans.map((f) => f.loc),
+    fans.map((f) => f.power)
+  )
 
-  const particle_size = 0.02
+  const particle_size = 0.01
   const geometry = new THREE.InstancedBufferGeometry()
   const positions = new THREE.BufferAttribute(new Float32Array(4 * 3), 3)
   positions.setXYZ(
@@ -104,7 +111,7 @@ export default function ThreeD(props: RouteComponentProps) {
         value: new THREE.Vector2(texture_dim, texture_dim),
       },
       screen: {
-        value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
+        value: new THREE.Vector2(0, 0),
       },
     },
     vertexShader: vert,
@@ -142,6 +149,11 @@ export default function ThreeD(props: RouteComponentProps) {
       fans.map((fan) => fan.loc),
       fans.map((fan) => fan.power)
     )
+    material.uniforms.screen.value = new THREE.Vector2(
+      window.innerWidth,
+      window.innerHeight
+    )
+    material.uniformsNeedUpdate = true
     material.needsUpdate = true
 
     renderer.setRenderTarget(null)

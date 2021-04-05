@@ -5,13 +5,17 @@ import fbo_frag from "../data/fbo_frag.glsl"
 let camera, scene
 let texture
 let renderTargetA, renderTargetB, simMaterial
+let renderer
 
 const initFBO = (
-  renderer: THREE.WebGLRenderer,
+  _renderer: THREE.WebGLRenderer,
   initTexture: THREE.Texture,
   width: number,
-  height: number
+  height: number,
+  fan_locs: THREE.Vector3[],
+  fan_powers: number[]
 ) => {
+  renderer = _renderer
   texture = initTexture
   texture.minFilter = THREE.NearestFilter
   texture.magFilter = THREE.NearestFilter
@@ -29,10 +33,10 @@ const initFBO = (
         value: 0.0,
       },
       fan_locs: {
-        value: [],
+        value: fan_locs,
       },
       fan_powers: {
-        value: [],
+        value: fan_powers,
       },
     },
     vertexShader: fbo_vert,
@@ -45,21 +49,13 @@ const initFBO = (
     width / 2,
     width / 2,
     -width / 2,
-    -1,
-    1
+    1,
+    1000
   )
+  camera.position.z = 1
   scene.add(new THREE.Mesh(new THREE.PlaneGeometry(width, width), simMaterial))
 
-  renderTargetA = new THREE.WebGLRenderTarget(width, height, {
-    // wrapS: THREE.RepeatWrapping,
-    // wrapT: THREE.RepeatWrapping,
-    // minFilter: THREE.NearestFilter,
-    // magFilter: THREE.NearestFilter,
-    // format: THREE.RGBAFormat,
-    // type: THREE.FloatType,
-    // stencilBuffer: false,
-  })
-
+  renderTargetA = new THREE.WebGLRenderTarget(width, height, {})
   renderTargetB = renderTargetA.clone()
 
   renderer.setRenderTarget(renderTargetA)
@@ -73,17 +69,17 @@ const renderFBO = (
   fan_locs: THREE.Vector3[],
   fan_powers: number[]
 ) => {
-  // const oldA = renderTargetA
-  // renderTargetA = renderTargetB
-  // renderTargetB = oldA
-  // simMaterial.uniforms.posTex.value = renderTargetA.texture
-  // simMaterial.uniforms.time.value = time
-  // simMaterial.uniforms.fan_locs.value = fan_locs
-  // simMaterial.uniforms.fan_powers.value = fan_powers
-  // simMaterial.uniformsNeedUpdate = true
-  // renderer.setRenderTarget(renderTargetB)
-  // renderer.render(scene, camera)
-  // renderTargetB.needsUpdate = true
+  const oldA = renderTargetA
+  renderTargetA = renderTargetB
+  renderTargetB = oldA
+  simMaterial.uniforms.posTex.value = renderTargetA.texture
+  simMaterial.uniforms.time.value = time
+  simMaterial.uniforms.fan_locs.value = fan_locs
+  simMaterial.uniforms.fan_powers.value = fan_powers
+  simMaterial.uniformsNeedUpdate = true
+  renderer.setRenderTarget(renderTargetB)
+  renderer.render(scene, camera)
+  renderTargetB.needsUpdate = true
 }
 
 export {
