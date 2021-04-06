@@ -9,31 +9,41 @@ import { renderFBO, initFBO, render_target, sceneboy, cameraboy } from "./fbo"
 const renderer = new THREE.WebGLRenderer()
 let camera
 let fans = []
-const start_time = new Date()
+let start_time = new Date()
 
 export default function ThreeD(props: RouteComponentProps) {
   let initFans = () => {
     fans.push({
-      loc: new THREE.Vector2(0.5, 0.5),
+      loc: new THREE.Vector2(0.75, 0.5),
       direction: new THREE.Vector2(-1.0, 0.0),
-      power: 2,
+      power: 0.1,
     })
     fans.push({
-      loc: new THREE.Vector2(0.5, 0),
+      loc: new THREE.Vector2(0.25, 0.5),
       direction: new THREE.Vector2(1.0, 0.0),
-      power: 1,
+      power: 0.1,
+    })
+    fans.push({
+      loc: new THREE.Vector2(0.45, 0.5),
+      direction: new THREE.Vector2(1.0, 0.0),
+      power: 0.1,
+    })
+    fans.push({
+      loc: new THREE.Vector2(0.8, 0.25),
+      direction: new THREE.Vector2(1.0, 0.0),
+      power: 0.1,
     })
   }
 
   initFans()
-  const texture_dim = 100.0
+  const texture_dim = 250.0
   const tsize = texture_dim * texture_dim
-  let data = new Uint8Array(3 * tsize)
+  let data = new Float32Array(3 * tsize)
   for (let x = 0; x < texture_dim; x++) {
     for (let y = 0; y < texture_dim; y++) {
       let stride = (x + texture_dim * y) * 3
-      data[stride] = (x * 255) / 100
-      data[stride + 1] = (y * 255) / 100
+      data[stride] = x / texture_dim
+      data[stride + 1] = y / texture_dim
       data[stride + 2] = 0 //ignore for now
     }
   }
@@ -41,8 +51,10 @@ export default function ThreeD(props: RouteComponentProps) {
     data,
     texture_dim,
     texture_dim,
-    THREE.RGBFormat
+    THREE.RGBFormat,
+    THREE.FloatType
   )
+
   initFBO(
     renderer,
     texture,
@@ -52,7 +64,7 @@ export default function ThreeD(props: RouteComponentProps) {
     fans.map((f) => f.power)
   )
 
-  const particle_size = 0.01
+  const particle_size = 0.007
   const geometry = new THREE.InstancedBufferGeometry()
   const positions = new THREE.BufferAttribute(new Float32Array(4 * 3), 3)
   positions.setXYZ(
@@ -149,6 +161,7 @@ export default function ThreeD(props: RouteComponentProps) {
       fans.map((fan) => fan.loc),
       fans.map((fan) => fan.power)
     )
+    start_time = new Date()
     material.uniforms.screen.value = new THREE.Vector2(
       window.innerWidth,
       window.innerHeight

@@ -1,4 +1,6 @@
 let vert = `
+precision highp float;
+
 uniform sampler2D mapping;
 uniform vec2 dims;
 uniform vec2 screen;

@@ -55,7 +55,9 @@ const initFBO = (
   camera.position.z = 1
   scene.add(new THREE.Mesh(new THREE.PlaneGeometry(width, width), simMaterial))
 
-  renderTargetA = new THREE.WebGLRenderTarget(width, height, {})
+  renderTargetA = new THREE.WebGLRenderTarget(width, height, {
+    type: THREE.FloatType,
+  })
   renderTargetB = renderTargetA.clone()
 
   renderer.setRenderTarget(renderTargetA)
