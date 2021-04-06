@@ -12,6 +12,21 @@ let fans = []
 let start_time = new Date()
 
 export default function ThreeD(props: RouteComponentProps) {
+  let onMouseDown = (event) => {
+    event.preventDefault()
+    let mouse = new THREE.Vector2()
+    mouse.x = event.clientX / window.innerWidth
+    mouse.y = 1.0 - event.clientY / window.innerHeight
+    fans[0].loc = mouse
+    fans[0].power = 0.05
+    fans[0].direction = new THREE.Vector2().subVectors(
+      mouse,
+      new THREE.Vector2(0.5, 0.5)
+    )
+
+    console.log(mouse)
+  }
+
   let initFans = () => {
     for (let i = 0; i < 20; i++) {
       fans.push({
@@ -20,13 +35,13 @@ export default function ThreeD(props: RouteComponentProps) {
           Math.random() * 2.0 - 1.0,
           Math.random() * 2.0 - 1.0
         ),
-        power: Math.random() * 0.01,
+        power: Math.random() * 0.005,
       })
     }
   }
 
   initFans()
-  const texture_dim = 300.0
+  const texture_dim = 250.0
   const tsize = texture_dim * texture_dim
   let data = new Float32Array(3 * tsize)
   for (let x = 0; x < texture_dim; x++) {
@@ -139,6 +154,8 @@ export default function ThreeD(props: RouteComponentProps) {
     root.appendChild(renderer.domElement)
 
     camera.position.z = 1
+
+    document.addEventListener("mousemove", onMouseDown, false)
 
     animate()
   }, [])
