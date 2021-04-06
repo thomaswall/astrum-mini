@@ -13,30 +13,20 @@ let start_time = new Date()
 
 export default function ThreeD(props: RouteComponentProps) {
   let initFans = () => {
-    fans.push({
-      loc: new THREE.Vector2(0.75, 0.5),
-      direction: new THREE.Vector2(-1.0, 0.0),
-      power: 0.1,
-    })
-    fans.push({
-      loc: new THREE.Vector2(0.25, 0.5),
-      direction: new THREE.Vector2(1.0, 0.0),
-      power: 0.1,
-    })
-    fans.push({
-      loc: new THREE.Vector2(0.45, 0.5),
-      direction: new THREE.Vector2(1.0, 0.0),
-      power: 0.1,
-    })
-    fans.push({
-      loc: new THREE.Vector2(0.8, 0.25),
-      direction: new THREE.Vector2(1.0, 0.0),
-      power: 0.1,
-    })
+    for (let i = 0; i < 20; i++) {
+      fans.push({
+        loc: new THREE.Vector2(Math.random(), Math.random()),
+        direction: new THREE.Vector2(
+          Math.random() * 2.0 - 1.0,
+          Math.random() * 2.0 - 1.0
+        ),
+        power: Math.random() * 0.01,
+      })
+    }
   }
 
   initFans()
-  const texture_dim = 250.0
+  const texture_dim = 300.0
   const tsize = texture_dim * texture_dim
   let data = new Float32Array(3 * tsize)
   for (let x = 0; x < texture_dim; x++) {
@@ -61,7 +51,8 @@ export default function ThreeD(props: RouteComponentProps) {
     texture_dim,
     texture_dim,
     fans.map((f) => f.loc),
-    fans.map((f) => f.power)
+    fans.map((f) => f.power),
+    fans.map((f) => f.direction)
   )
 
   const particle_size = 0.007
@@ -159,7 +150,8 @@ export default function ThreeD(props: RouteComponentProps) {
     renderFBO(
       curr_time.getTime() - start_time.getTime(),
       fans.map((fan) => fan.loc),
-      fans.map((fan) => fan.power)
+      fans.map((fan) => fan.power),
+      fans.map((f) => f.direction)
     )
     start_time = new Date()
     material.uniforms.screen.value = new THREE.Vector2(

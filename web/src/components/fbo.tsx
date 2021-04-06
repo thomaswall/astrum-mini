@@ -12,8 +12,9 @@ const initFBO = (
   initTexture: THREE.Texture,
   width: number,
   height: number,
-  fan_locs: THREE.Vector3[],
-  fan_powers: number[]
+  fan_locs: THREE.Vector2[],
+  fan_powers: number[],
+  fan_directions: THREE.Vector2[]
 ) => {
   renderer = _renderer
   texture = initTexture
@@ -37,6 +38,9 @@ const initFBO = (
       },
       fan_powers: {
         value: fan_powers,
+      },
+      fan_directions: {
+        value: fan_directions,
       },
     },
     vertexShader: fbo_vert,
@@ -68,8 +72,9 @@ const initFBO = (
 
 const renderFBO = (
   time: number,
-  fan_locs: THREE.Vector3[],
-  fan_powers: number[]
+  fan_locs: THREE.Vector2[],
+  fan_powers: number[],
+  fan_directions: THREE.Vector2[]
 ) => {
   const oldA = renderTargetA
   renderTargetA = renderTargetB
@@ -78,6 +83,7 @@ const renderFBO = (
   simMaterial.uniforms.time.value = time
   simMaterial.uniforms.fan_locs.value = fan_locs
   simMaterial.uniforms.fan_powers.value = fan_powers
+  simMaterial.uniforms.fan_directions.value = fan_directions
   simMaterial.uniformsNeedUpdate = true
   renderer.setRenderTarget(renderTargetB)
   renderer.render(scene, camera)
