@@ -34,7 +34,7 @@ void main() {
     
     //float t = time * 0.00005;
 
-    final_pos = max(min(final_pos, 0.95), 0.05);
+    final_pos = max(min(final_pos, 1.0), 0.0);
     gl_FragColor = vec4(final_pos, 1.0);
 
 }`
