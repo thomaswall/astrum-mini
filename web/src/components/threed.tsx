@@ -50,7 +50,7 @@ let initFans = () => {
         Math.random() * 2.0 - 1.0,
         Math.random() * 2.0 - 1.0
       ),
-      power: Math.random() * 0.0005,
+      power: Math.random() * 0.0015,
       icon: icon,
     })
   }
@@ -166,12 +166,11 @@ const plot_geo = new THREE.PlaneGeometry(
   3,
   3
 )
-const plot_mat = new THREE.MeshBasicMaterial({
+const plot_mat = new THREE.LineBasicMaterial({
   color: 0xffff00,
-  side: THREE.DoubleSide,
-  wireframe: true,
 })
-const plot = new THREE.Mesh(plot_geo, plot_mat)
+
+const plot = new THREE.LineSegments(new THREE.EdgesGeometry(plot_geo), plot_mat)
 plot.position.set(my_loc.x, my_loc.y, my_loc.z)
 scene.add(plot)
 
@@ -191,8 +190,12 @@ const animate = () => {
   material.uniformsNeedUpdate = true
   material.needsUpdate = true
 
-  let boundaries_x = new THREE.Vector2(0.4, 0.5)
-  let boundaries_y = new THREE.Vector2(0.4, 0.5)
+  const plot_loc = new THREE.Vector2(my_loc.x, my_loc.y)
+    .divideScalar(window.innerWidth)
+    .addScalar(0.5)
+
+  let boundaries_x = new THREE.Vector2(plot_loc.x - 0.1, plot_loc.x + 0.1)
+  let boundaries_y = new THREE.Vector2(plot_loc.y - 0.1, plot_loc.y + 0.1)
   let new_count = 0
   renderer.readRenderTargetPixels(
     render_target,
@@ -284,6 +287,7 @@ export default function ThreeD(props: RouteComponentProps) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: rgba(1, 0, 1, 0.2);
   `
 
   const Slider = styled.input`
