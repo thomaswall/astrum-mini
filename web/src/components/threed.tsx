@@ -14,7 +14,7 @@ let camera
 let fans = []
 let start_time = new Date()
 let read = new Float32Array()
-let last_count = 639
+let last_count = 0
 let callback = (_count) => {}
 
 let onMouseDown = (event) => {
@@ -33,9 +33,9 @@ let onMouseDown = (event) => {
 let initFans = () => {
   for (let i = 0; i < 20; i++) {
     const loc = new THREE.Vector2(Math.random(), Math.random())
-    const icon_geo = new THREE.PlaneGeometry(10, 10)
+    const icon_geo = new THREE.CircleGeometry(7, 10)
     const icon_mat = new THREE.MeshBasicMaterial({
-      color: 0xffff00,
+      color: new THREE.Color("#325D41"),
       side: THREE.DoubleSide,
     })
     const icon = new THREE.Mesh(icon_geo, icon_mat)
@@ -167,7 +167,7 @@ const plot_geo = new THREE.PlaneGeometry(
   3
 )
 const plot_mat = new THREE.LineBasicMaterial({
-  color: 0xffff00,
+  color: new THREE.Color("#325D41"),
 })
 
 const plot = new THREE.LineSegments(new THREE.EdgesGeometry(plot_geo), plot_mat)
