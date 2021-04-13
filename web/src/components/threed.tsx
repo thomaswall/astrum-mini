@@ -162,12 +162,11 @@ scene.add(points)
 const my_loc = fans[0].icon.position
 const plot_geo = new THREE.PlaneGeometry(
   window.innerWidth * 0.1,
-  window.innerHeight * 0.1,
-  3,
-  3
+  window.innerHeight * 0.1
 )
 const plot_mat = new THREE.LineBasicMaterial({
-  color: new THREE.Color("#325D41"),
+  color: new THREE.Color("#FFFFFF"),
+  linewidth: 3,
 })
 
 const plot = new THREE.LineSegments(new THREE.EdgesGeometry(plot_geo), plot_mat)
