@@ -51,13 +51,13 @@ const initFBO = (
   camera = new THREE.OrthographicCamera(
     -width / 2,
     width / 2,
-    width / 2,
-    -width / 2,
+    height / 2,
+    -height / 2,
     1,
     1000
   )
   camera.position.z = 1
-  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(width, width), simMaterial))
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(width, height), simMaterial))
 
   renderTargetA = new THREE.WebGLRenderTarget(width, height, {
     type: THREE.FloatType,

@@ -8,8 +8,6 @@ import styled from "styled-components"
 import { renderFBO, initFBO, render_target, sceneboy, cameraboy } from "./fbo"
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
-const gl = renderer.getContext()
-gl.getExtension("OES_texture_float")
 let camera
 let fans = []
 let start_time = new Date()
@@ -57,7 +55,7 @@ let initFans = () => {
 }
 
 initFans()
-const texture_dim = 250.0
+const texture_dim = 750.0
 const tsize = texture_dim * texture_dim
 let data = new Float32Array(3 * tsize)
 read = new Float32Array(4 * tsize)
@@ -87,33 +85,13 @@ initFBO(
   fans.map((f) => f.direction)
 )
 
-const particle_size = 0.007
+const particle_size = 0.5
 const geometry = new THREE.InstancedBufferGeometry()
 const positions = new THREE.BufferAttribute(new Float32Array(4 * 3), 3)
-positions.setXYZ(
-  0,
-  -texture_dim * particle_size,
-  texture_dim * particle_size,
-  0.0
-)
-positions.setXYZ(
-  1,
-  texture_dim * particle_size,
-  texture_dim * particle_size,
-  0.0
-)
-positions.setXYZ(
-  2,
-  -texture_dim * particle_size,
-  -texture_dim * particle_size,
-  0.0
-)
-positions.setXYZ(
-  3,
-  texture_dim * particle_size,
-  -texture_dim * particle_size,
-  0.0
-)
+positions.setXYZ(0, -particle_size, particle_size, 0.0)
+positions.setXYZ(1, particle_size, particle_size, 0.0)
+positions.setXYZ(2, -particle_size, -particle_size, 0.0)
+positions.setXYZ(3, particle_size, -particle_size, 0.0)
 geometry.setAttribute("position", positions)
 
 // uvs
@@ -129,7 +107,7 @@ geometry.setIndex(
   new THREE.BufferAttribute(new Uint16Array([0, 2, 1, 2, 3, 1]), 1)
 )
 
-const indices = new Uint16Array(texture_dim * texture_dim)
+const indices = new Uint32Array(texture_dim * texture_dim)
 for (let i = 0; i < tsize; i++) indices[i] = i
 
 geometry.setAttribute(

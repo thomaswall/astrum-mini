@@ -4,7 +4,7 @@ precision highp float;
 uniform sampler2D mapping;
 uniform vec2 dims;
 uniform vec2 screen;
-attribute float pindex;
+attribute uint pindex;
 
 void main(){
   vec2 vUv = vec2(mod(float(pindex), dims.x), floor(float(pindex) / dims.x)) / dims.x;
