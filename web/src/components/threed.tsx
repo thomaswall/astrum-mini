@@ -162,7 +162,7 @@ scene.add(points)
 const my_loc = fans[0].icon.position
 const plot_geo = new THREE.PlaneGeometry(
   window.innerWidth * 0.1,
-  window.innerWidth * 0.1,
+  window.innerHeight * 0.1,
   3,
   3
 )
@@ -190,12 +190,15 @@ const animate = () => {
   material.uniformsNeedUpdate = true
   material.needsUpdate = true
 
-  const plot_loc = new THREE.Vector2(my_loc.x, my_loc.y)
-    .divideScalar(window.innerWidth)
-    .addScalar(0.5)
+  let ratio = window.innerHeight / window.innerWidth
+  const plot_loc = new THREE.Vector2(fans[0].loc.x, fans[0].loc.y)
 
-  let boundaries_x = new THREE.Vector2(plot_loc.x - 0.1, plot_loc.x + 0.1)
-  let boundaries_y = new THREE.Vector2(plot_loc.y - 0.1, plot_loc.y + 0.1)
+  let boundaries_x = new THREE.Vector2(plot_loc.x - 0.05, plot_loc.x + 0.05)
+  let boundaries_y = new THREE.Vector2(
+    plot_loc.y - 0.05 * ratio,
+    plot_loc.y + 0.05 * ratio
+  )
+
   let new_count = 0
   renderer.readRenderTargetPixels(
     render_target,
@@ -238,6 +241,50 @@ const setPower = (power) => {
 
 let init = false
 
+const Controls = styled.div`
+  position: fixed;
+  width: 20rem;
+  height: 20rem;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(1, 0, 1, 0.2);
+`
+
+const Slider = styled.input`
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-color: #000;
+  width: 15 rem;
+  margin: 1rem;
+
+  ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 1.5rem;
+    width: 0.7rem;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+  ::-ms-track {
+    width: 100%;
+    cursor: pointer;
+
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+`
+
+const Count = styled.div`
+  color: white;
+  font-size: 2rem;
+`
+
 export default function ThreeD(props: RouteComponentProps) {
   const [count, set_count] = useState(0)
   const [direction, set_direction] = useState(50)
@@ -259,14 +306,13 @@ export default function ThreeD(props: RouteComponentProps) {
 
       camera.position.z = 1
       init = true
+      animate()
     }
 
     //document.addEventListener("mousemove", onMouseDown, false)
     callback = (_count) => {
       set_count(_count)
     }
-
-    animate()
   }, [])
 
   React.useEffect(() => {
@@ -276,50 +322,6 @@ export default function ThreeD(props: RouteComponentProps) {
   React.useEffect(() => {
     setPower((power / 100.0) * 0.0005)
   }, [power])
-
-  const Controls = styled.div`
-    position: fixed;
-    width: 20rem;
-    height: 20rem;
-    bottom: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(1, 0, 1, 0.2);
-  `
-
-  const Slider = styled.input`
-    -webkit-appearance: none;
-    cursor: pointer;
-    background-color: #000;
-    width: 15 rem;
-    margin: 1rem;
-
-    ::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      border: 1px solid #000000;
-      height: 1.5rem;
-      width: 0.7rem;
-      background: #ffffff;
-      cursor: pointer;
-    }
-
-    ::-ms-track {
-      width: 100%;
-      cursor: pointer;
-
-      background: transparent;
-      border-color: transparent;
-      color: transparent;
-    }
-  `
-
-  const Count = styled.div`
-    color: white;
-    font-size: 2rem;
-  `
 
   return (
     <div id="3-root" style={{ width: "100%", height: "100%" }}>
