@@ -48,7 +48,7 @@ let initFans = () => {
         Math.random() * 2.0 - 1.0,
         Math.random() * 2.0 - 1.0
       ),
-      power: Math.random() * 0.0015,
+      power: Math.random() * 0.02,
       icon: icon,
     })
   }
@@ -134,7 +134,7 @@ const material = new THREE.ShaderMaterial({
 const points = new THREE.Mesh(geometry, material)
 const scene = new THREE.Scene()
 
-for (let fan of fans) scene.add(fan.icon)
+//for (let fan of fans) scene.add(fan.icon)
 scene.add(points)
 
 const my_loc = fans[0].icon.position
@@ -149,7 +149,7 @@ const plot_mat = new THREE.LineBasicMaterial({
 
 const plot = new THREE.LineSegments(new THREE.EdgesGeometry(plot_geo), plot_mat)
 plot.position.set(my_loc.x, my_loc.y, my_loc.z)
-scene.add(plot)
+//scene.add(plot)
 
 const animate = () => {
   const curr_time = new Date()
@@ -224,7 +224,7 @@ const Controls = styled.div`
   height: 20rem;
   bottom: 0;
   right: 0;
-  display: flex;
+  display: none; //flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
