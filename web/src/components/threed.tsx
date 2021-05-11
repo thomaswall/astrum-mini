@@ -1,11 +1,11 @@
 import React, { useState } from "react"
-import { local, sync } from "../data/riptide"
+import { Fan, fan_write, query_all } from "../data/fan"
 import { RouteComponentProps } from "@reach/router"
 import * as THREE from "three"
 import vert from "../data/vert.glsl"
 import frag from "../data/frag.glsl"
 import styled from "styled-components"
-import { renderFBO, initFBO, render_target, sceneboy, cameraboy } from "./fbo"
+import { renderFBO, initFBO, render_target } from "./fbo"
 
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 let camera
@@ -14,18 +14,63 @@ let start_time = new Date()
 let read = new Float32Array()
 let last_count = 0
 let callback = (_count) => {}
+let last_update = Date.now()
+let last_fetch = Date.now()
+let user
 
-let onMouseDown = (event) => {
+function debounce(amount: number, last_time: number) {
+  const now = Date.now()
+  if (now - last_time < amount) return false
+  return true
+}
+
+function onMouseDown(event) {
   event.preventDefault()
+  console.log(user)
   let mouse = new THREE.Vector2()
   mouse.x = event.clientX / window.innerWidth
   mouse.y = 1.0 - event.clientY / window.innerHeight
   fans[0].loc = mouse
   fans[0].power = 0.05
-  fans[0].direction = new THREE.Vector2().subVectors(
-    mouse,
-    new THREE.Vector2(0.5, 0.5)
-  )
+  fans[0].direction = new THREE.Vector2()
+    .subVectors(mouse, new THREE.Vector2(0.5, 0.5))
+    .multiplyScalar(-1)
+    .normalize()
+    .multiplyScalar(0.2)
+
+  if (!debounce(500, last_update) || !user) return
+  last_update = Date.now()
+  const fan: Fan = {
+    direction: {
+      x: fans[0].direction.x,
+      y: fans[0].direction.y,
+    },
+    position: {
+      x: mouse.x,
+      y: mouse.y,
+    },
+    power: 0.05,
+    user: user,
+  }
+  fan_write(fan)
+}
+
+async function getPublicFans() {
+  if (!debounce(500, last_fetch)) return
+  last_fetch = Date.now()
+  const incoming_fans: Fan[] | false = await query_all()
+  if (!incoming_fans) return
+  incoming_fans.sort((fan1: Fan, fan2: Fan) => {
+    return fan1.user > fan2.user ? -1 : 1
+  })
+  let index = 1
+  for (let fan of incoming_fans) {
+    fans[index].loc = new THREE.Vector2(fan.position.x, fan.position.y)
+    fans[index].direction = new THREE.Vector2(fan.direction.x, fan.direction.y)
+    fans[index].power = fan.power
+
+    index++
+  }
 }
 
 let initFans = () => {
@@ -48,14 +93,14 @@ let initFans = () => {
         Math.random() * 2.0 - 1.0,
         Math.random() * 2.0 - 1.0
       ),
-      power: Math.random() * 0.02,
+      power: 0, //Math.random() * 0.002,
       icon: icon,
     })
   }
 }
 
 initFans()
-const texture_dim = 750.0
+const texture_dim = 500.0
 const tsize = texture_dim * texture_dim
 let data = new Float32Array(3 * tsize)
 read = new Float32Array(4 * tsize)
@@ -152,6 +197,7 @@ plot.position.set(my_loc.x, my_loc.y, my_loc.z)
 //scene.add(plot)
 
 const animate = () => {
+  getPublicFans()
   const curr_time = new Date()
   renderFBO(
     curr_time.getTime() - start_time.getTime(),
@@ -262,14 +308,24 @@ const Count = styled.div`
   font-size: 2rem;
 `
 
+const updateViewport = () => {
+  const root = document.getElementById("3-root")
+  camera.left = -window.innerWidth / 2
+  camera.right = window.innerWidth / 2
+  camera.top = window.innerHeight / 2
+  camera.bottom = -window.innerHeight / 2
+  camera.updateProjectionMatrix()
+  renderer.setSize(root.clientWidth, root.clientHeight)
+}
+
 export default function ThreeD(props: RouteComponentProps) {
   const [count, set_count] = useState(0)
   const [direction, set_direction] = useState(50)
   const [power, set_power] = useState(50)
 
   React.useEffect(() => {
+    user = prompt("username?")
     if (!init) {
-      let root = document.getElementById("3-root")
       camera = new THREE.OrthographicCamera(
         -window.innerWidth / 2,
         window.innerWidth / 2,
@@ -278,7 +334,8 @@ export default function ThreeD(props: RouteComponentProps) {
         1,
         1000
       )
-      renderer.setSize(root.clientWidth, root.clientHeight)
+      updateViewport()
+      const root = document.getElementById("3-root")
       root.appendChild(renderer.domElement)
 
       camera.position.z = 1
@@ -286,7 +343,8 @@ export default function ThreeD(props: RouteComponentProps) {
       animate()
     }
 
-    //document.addEventListener("mousemove", onMouseDown, false)
+    document.addEventListener("mousemove", onMouseDown, false)
+    window.onresize = () => updateViewport()
     callback = (_count) => {
       set_count(_count)
     }

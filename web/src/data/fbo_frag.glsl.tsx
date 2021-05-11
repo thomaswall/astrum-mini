@@ -19,6 +19,9 @@ void main() {
 
     vec3 pos = texture2D(posTex, vUv).xyz;
 
+    //17ms frame rate
+    float t = 1.0;//time / 17.0;
+
 
     vec3 final_pos = pos;
     for(int i = 0; i < NUM_FANS; i++) {
@@ -43,9 +46,7 @@ void main() {
     vel += vec3(-1.0, 0.0, 0.0) * repulsion(1.0 - final_pos.x);
     vel += vec3(0.0, 1.0, 0.0) * repulsion(final_pos.y - 0.0);
     vel += vec3(0.0, -1.0, 0.0) * repulsion(1.0 - final_pos.y);
-    final_pos += vel;
-    
-    //float t = time * 0.00005;
+    final_pos += vel * t;
 
     final_pos = max(min(final_pos, 1.0), 0.0);
     gl_FragColor = vec4(final_pos, 1.0);
