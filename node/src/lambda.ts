@@ -1,6 +1,10 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyHandlerV2 } from "aws-lambda";
 import Redis from "ioredis";
 import { Fan } from "./fan";
+import * as aws from "aws-sdk";
+
+const s3 = new aws.S3();
+
 const client = new Redis();
 
 export const handler: APIGatewayProxyHandlerV2 = async (
@@ -37,5 +41,22 @@ export const update: APIGatewayProxyHandlerV2 = async (
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
     body: response,
+  };
+};
+
+export const updateState: APIGatewayProxyHandlerV2 = async (
+  event: APIGatewayProxyEventV2
+) => {
+  const params = {
+    Bucket: process.env.bucketName || "",
+    Key: "test",
+    Body: JSON.stringify({ hi: "there" }),
+  };
+  await s3.upload(params).promise();
+
+  return {
+    statusCode: 200,
+    headers: { "Content-Type": "application/json" },
+    body: "hi",
   };
 };

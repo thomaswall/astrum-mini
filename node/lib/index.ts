@@ -8,8 +8,5 @@ export default function main(app: sst.App): void {
     runtime: "nodejs12.x",
   });
 
-  new MyStack(app, "my-stack");
-  new Storage(app, "my-storage");
-
-  // Add more stacks
+  new MyStack(app, "stack");
 }
