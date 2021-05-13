@@ -11,6 +11,7 @@ export type Fan = {
     y: number
   }
   user: string
+  updated?: number
 }
 
 export function fan_write(fan: Fan) {

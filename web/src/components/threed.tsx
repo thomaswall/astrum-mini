@@ -26,12 +26,11 @@ function debounce(amount: number, last_time: number) {
 
 function onMouseDown(event) {
   event.preventDefault()
-  console.log(user)
   let mouse = new THREE.Vector2()
   mouse.x = event.clientX / window.innerWidth
   mouse.y = 1.0 - event.clientY / window.innerHeight
   fans[0].loc = mouse
-  fans[0].power = 0.05
+  fans[0].power = 0.01
   fans[0].direction = new THREE.Vector2()
     .subVectors(mouse, new THREE.Vector2(0.5, 0.5))
     .multiplyScalar(-1)
@@ -49,7 +48,7 @@ function onMouseDown(event) {
       x: mouse.x,
       y: mouse.y,
     },
-    power: 0.05,
+    power: 0.01,
     user: user,
   }
   fan_write(fan)
@@ -58,8 +57,9 @@ function onMouseDown(event) {
 async function getPublicFans() {
   if (!debounce(500, last_fetch)) return
   last_fetch = Date.now()
-  const incoming_fans: Fan[] | false = await query_all()
+  let incoming_fans: Fan[] | false = await query_all()
   if (!incoming_fans) return
+  incoming_fans = incoming_fans.filter((fan: Fan) => fan.user !== user)
   incoming_fans.sort((fan1: Fan, fan2: Fan) => {
     return fan1.user > fan2.user ? -1 : 1
   })

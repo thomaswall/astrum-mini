@@ -9,4 +9,5 @@ export type Fan = {
     y: number;
   };
   user: string;
+  last_updated: number;
 };
