@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@aws-cdk/core": "1.98.0",
-    "@serverless-stack/cli": "0.11.0",
-    "@serverless-stack/resources": "0.11.0",
+    "@serverless-stack/cli": "1.15.3",
+    "@serverless-stack/resources": "1.15.3",
     "ioredis": "^4.26.0"
   }
 }
